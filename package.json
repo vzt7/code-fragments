@@ -1,0 +1,48 @@
+{
+  "name": "code-fragments",
+  "version": "0.0.1",
+  "description": "An extremely simple and easy-to-use JS \"template\".",
+  "repository": "vzt7/code-fragments",
+  "keywords": [
+    "template",
+    "code-fragments",
+    "ejs"
+  ],
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "vitest dev",
+    "lint": "eslint --ext .ts,.js,.mjs,.cjs ./src",
+    "prepack": "unbuild",
+    "version": "standard-version",
+    "release": "pnpm test && git push --follow-tags && pnpm publish --access public",
+    "test": "pnpm lint && vitest run --coverage"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.46.1",
+    "@typescript-eslint/parser": "^5.46.1",
+    "@vitest/coverage-c8": "^0.25.6",
+    "eslint": "^8.29.0",
+    "eslint-config-typescript": "^3.0.0",
+    "standard-version": "^9.5.0",
+    "typescript": "^4.9.4",
+    "unbuild": "^1.0.2",
+    "vitest": "^0.25.6"
+  },
+  "packageManager": "pnpm@7.18.1"
+}
