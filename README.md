@@ -2,12 +2,15 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Github Actions][github-actions-src]][github-actions-href]
 [![Codecov][codecov-src]][codecov-href]
 
 [npm-version-src]: https://img.shields.io/npm/v/code-fragments?style=flat-square
 [npm-version-href]: https://npmjs.com/package/code-fragments
 [npm-downloads-src]: https://img.shields.io/npm/dm/code-fragments?style=flat-square
 [npm-downloads-href]: https://npmjs.com/package/code-fragments
+[github-actions-src]: https://github.com/vzt7/code-fragments/actions/workflows/ci.yml/badge.svg
+[github-actions-href]: https://github.com/vzt7/code-fragments/actions
 [codecov-src]: https://img.shields.io/codecov/c/gh/vzt7/code-fragments/main?style=flat-square
 [codecov-href]: https://codecov.io/gh/vzt7/code-fragments
 
@@ -45,12 +48,12 @@ fragments.push('console.log('fn has been called.');');
 
 const code = fragments.complete();
 /* You got:
-`const fn = () => {
+const fn = () => {
   // ...
   return null;
 };
 fn();
-console.log('fn has been called.');`
+console.log('fn has been called.');
 */
 ```
 
@@ -69,9 +72,9 @@ const code = fragments.complete({
   },
 });
 /* You got:
-`const fn = () => { return null };
+const fn = () => { return null };
 fn();
-console.log('fn has been called.');`
+console.log('fn has been called.');
 */
 ```
 
