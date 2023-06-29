@@ -14,7 +14,7 @@ export class CodeFragments<Context = any> extends Array<Fragments<Context>> {
   }
 
   fragments(...args: Fragments<Context>[]) {
-    this.push(new CodeFragments(...args));
+    return new CodeFragments(...args);
   }
 
   private _complete(
@@ -26,6 +26,7 @@ export class CodeFragments<Context = any> extends Array<Fragments<Context>> {
       endline?: boolean;
       depth?: number;
       spaces?: number;
+      separator?: string | ((options: { depth: number }) => string);
     }
   ): string {
     const {
@@ -35,6 +36,7 @@ export class CodeFragments<Context = any> extends Array<Fragments<Context>> {
       endline = false,
       depth = 0,
       spaces = 2,
+      separator,
     } = options || {};
     const _fragments = [...fragments];
     if (startline && _fragments[0] !== '\n') {
@@ -44,33 +46,32 @@ export class CodeFragments<Context = any> extends Array<Fragments<Context>> {
       _fragments.push('\n');
     }
 
-    const separator = '\n' + (indent ? ' '.repeat(spaces * depth) : '');
+    const getCode = (item: (typeof _fragments)[number]) => {
+      if (typeof item === 'string') {
+        return item;
+      }
+      if (item instanceof CodeFragments) {
+        const padSpaces = indent ? ' '.repeat(spaces * (depth + 1)) : '';
+        return padSpaces + item.complete({ ...options, depth: depth + 1 });
+      }
+      if (typeof item === 'function') {
+        return item(context);
+      }
+      return this._complete(item, { ...options, depth: depth + 1 });
+    };
+    const getSeparator = () => {
+      const _separator =
+        separator ?? '\n' + (indent ? ' '.repeat(spaces * depth) : '');
+      if (typeof _separator === 'function') {
+        return _separator({ depth });
+      }
+      return _separator;
+    };
 
-    return _fragments
-      .map((item) => {
-        if (typeof item === 'string') {
-          return item;
-        }
-        if (item instanceof CodeFragments) {
-          const padSpaces = indent ? ' '.repeat(spaces * (depth + 1)) : '';
-          return padSpaces + item.complete({ ...options, depth: depth + 1 });
-        }
-        if (typeof item === 'function') {
-          return item(context);
-        }
-        return this._complete(item, { ...options, depth: depth + 1 });
-      })
-      .join(separator);
+    return _fragments.map((item) => getCode(item)).join(getSeparator());
   }
 
-  complete(options?: {
-    context?: Context;
-    indent?: boolean;
-    startline?: boolean;
-    endline?: boolean;
-    depth?: number;
-    spaces?: number;
-  }) {
+  complete(options?: Partial<Parameters<typeof this._complete>['1']>) {
     return this._complete(this, { context: {} as Context, ...options });
   }
 }
