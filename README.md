@@ -36,7 +36,7 @@ Just use code fragments as an array, and call `fragments.complete` to output the
 Accept nested fragments, which will be indented with 2 spaces per depth:
 
 ```ts
-const fragments = createFragments();
+const fragments = new CodeFragments();
 
 fragments.push(
   'const fn = () => {',
@@ -44,7 +44,7 @@ fragments.push(
   '};'
 );
 fragments.push('fn();');
-fragments.push('console.log('fn has been called.');');
+fragments.push(`console.log('fn has been called.');`);
 
 const code = fragments.complete();
 /* You got:
@@ -60,7 +60,7 @@ console.log('fn has been called.');
 Accept a function to lazy complete dynamic fragments.
 
 ```ts
-const fragments = new CodeFragments<{ callback: () => string }>(); // Specify the context type for your dynamic fragments.
+const fragments = new CodeFragments<{ name: string }>(); // Specify the context type for your dynamic fragments.
 
 fragments.push('const fn = () => { return null };');
 fragments.push('fn();');
@@ -76,6 +76,25 @@ const fn = () => { return null };
 fn();
 console.log('fn has been called.');
 */
+```
+
+Accept a function or a string to customize separator.
+
+```ts
+const fragments = new CodeFragments<{ name: string }>(); // Specify the context type for your dynamic fragments.
+
+fragments.push('const fn = () => { return null };');
+fragments.push('fn();');
+fragments.push((context) => `console.log('${context.name} has been called.');`);
+
+const code = fragments.complete({
+  context: {
+    name: 'fn',
+  },
+  separator: () => `/** CUSTOM_SEPARATOR */`,
+});
+// You got:
+// const fn = () => { return null };/** CUSTOM_SEPARATOR */fn();/** CUSTOM_SEPARATOR */console.log('fn has been called.');
 ```
 
 ## 📖 API
